@@ -4,7 +4,7 @@ Ezxchange is a simple currency convert that will retreive exchange rates from Ya
 
 ::Motivation
 
-This web application was built with an intention to help travelers get an exchange rate for their trip 
+This web application was built with an intention to help travelers get an exchange rate easily for their trips 
 
 
 ::API Reference
