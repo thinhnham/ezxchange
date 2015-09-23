@@ -22,4 +22,4 @@ They do have one but it has US Dollas as the base currency ! APIs for historical
 
 ::License
 
-A short snippet describing the license (Apache, Javascript, BootstrapFormHelper, Jquery)
+(Apache, Javascript, BootstrapFormHelper, Jquery)
