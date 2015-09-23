@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+	<meta content="utf-8" http-equiv="encoding"> 
+	<!--style-sheets-->
+	<link href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<link href="js/bootstrap-formhelpers/dist/css/bootstrap-formhelpers.min.css" rel="stylesheet" media="screen">    
+	<!--libraries-->
+	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+	<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<script src="js/bootstrap-formhelpers/dist/js/bootstrap-formhelpers.min.js"></script>
+	<script src="js/functions.js"></script>
+	<!-- style -->
+	<style>
+	@media screen and (max-width: 400px) {
+    #bid_ask{
+        width:100px;
+    }
+    #logo{
+        height:150px;
+        width:300px;
+        padding:10px;
+        margin-left: -30px;
+    }
+	}
+	@media screen and (min-width: 401px) {
+    #bid_ask{
+        width:300px;
+    }
+    #logo{
+        height:200px;
+        width:400px;
+    }
+	}
+	</style>
+</head>
+<body>
+	<div class='row'>
+		<center><img id ='logo' src="logo_ezxchange.png" ></center>
+	</div>
+	<center><div class='container' id ='main'>
+		<div class="row">
+			<center><h4>User Inputs</h4></center><hr>
+			<div class='col-sm-5'><h5><b>Currency I have</b></h5><br>
+				<div style ='width:200px'><div id = 'currencies1' class="bfh-selectbox bfh-currencies" data-currency="USD" data-flags="true" data-filter="true"></div></div>
+				<h5>Amount:</h5>
+				<input type='number' id='base_currency' min='1'   value = '1'/>	
+			</div>
+			<div class='col-sm-2'><br><img class="btTxt_submit" src="switch_currency.png" style='height:80px;width:80px;'><br><br>
+				<button class='btn btn-primary active' id='switch' data-toggle="tooltip" title="Click Switch button to revese the exchange!"/>Switch</button>
+			</div>
+			<div class='col-sm-5'><h5><b>Currency I  want</b></h5><br>
+				<div style ='width:200px'><div id = 'currencies2' class="bfh-selectbox bfh-currencies" data-currency="EUR" data-flags="true" data-filter="true"></div></div>
+				<h5>Amount:</h5>			
+				<input type='number' id='convert_currency' min='0'  disabled="disabled">	
+			</div>
+		</div>
+		<div class='row'><br>
+			<div style='display:inline; margin-left:-25px'><label for='interbank_rate'>Interbank Interest Rate</label>&nbsp;<select name='interbank_rate' id='interbank_rate' style='width:150px' onchange ='update()'>
+				<option value='0'>0 %</option>
+				<option value='1'>1 %</option>
+				<option value='2'>2 % (Typical ATM rate)</option>
+				<option value='3'>3 % (Typical Credit Card Rate)</option>
+				<option value='4'>4 %</option>
+				<option value='5'>5 % (Typical Kiosk Rate)</option>
+			</select>
+			</div>
+			
+		</div>
+		<hr>
+		<div class="row">
+			<center><h4>Rate Details For : <span id="rate_name"></span></h4></center>
+			<h6>Exchange rate for the 24-hour period ending <span class='today'></span> at <span id='interest_rate'></span></h6>
+			<table id='bid_ask'class='table table-hover table-bordered'>
+				<tr class='info'><th></th><th>Bid <br>Sell 1 <span class='base'></span></th><th>Ask <br>Buy 1<span class='base'></span></th><tr>
+				<tr><td>Exchange Rate</td><td id='bid'></td><td id ='ask'></td></tr>
+			</table>
+			<p>These values represent the daily average of the Bid and Ask rates from Yahoo Finance.</p>
+		</div>
+		</div>
+	</center>
+</body>
+</html>
+<script type="text/javascript">
+	var operation = (function(){
+		var currencies1  = $('#currencies1');
+		var currencies2  = $('#currencies2');
+		var interest_rate  = $('#interbank_rate');
+		var yql_base_url =  'https://query.yahooapis.com/v1/public/yql';
+		var yql_query = 'select%20*%20from%20yahoo.finance.xchange%20where%20pair%20in%20("'+currencies1.val()+currencies2.val()+'")';
+		var yql_query_url = yql_base_url + "?q=" + yql_query + "&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";
+		var op_data =0;
+		var rate = 0;
+
+		function update(){
+			$('.base').html(currencies1.val());
+			$('#interest_rate').html('<b>'+interest_rate.val()+'%</b>');
+			yql_query = 'select%20*%20from%20yahoo.finance.xchange%20where%20pair%20in%20("'+currencies1.val()+currencies2.val()+'")';
+			yql_query_url = yql_base_url + "?q=" + yql_query + "&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";
+			$.get( yql_query_url, function( data ) {
+			op_data = data.query.results.rate;
+			console.log(op_data);
+			$('#rate_name').html("<b>"+op_data.Name+"</b>");
+			$('#bid').text(op_data.Bid);
+			$('#ask').text(op_data.Ask);
+			$('.today').text(op_data.Date);
+			rate  = parseFloat(op_data.Rate)*parseFloat($('#base_currency').val())*(1-parseFloat($('#interbank_rate').val())/100);
+			$('#convert_currency').val(Math.round(rate* 100) / 100);
+		});
+		}
+		window.update = update;
+	})(); 
+
+	var type_and_update = (function(){
+		var counter  = 0;
+		return function(){
+    		clearTimeout(counter);
+    		counter = setTimeout(update,500);
+  		}
+	})();	
+
+	$(document).ready(function(){
+		$('[data-toggle="tooltip"]').tooltip(); 
+		update();
+		$('#currencies1').on("change.bfhselectbox",function(){
+			update();
+		});
+		$('#currencies2').bind("change.bfhselectbox",function(){
+			update();
+		});
+
+		$('#base_currency').keyup(function(){
+			type_and_update();
+		});
+		$('#base_currency').change(function(){update();});
+
+		$('#switch').click(function(){
+			var value1  = $('#currencies1').val();
+			$('#currencies1').val($('#currencies2').val());
+			$('#currencies2').val(value1);
+			update();
+		});
+		//set the maximum of data field to today's data. The format is yyyy-mm-dd. See functions.js !
+	});
+</script>
