@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -44,7 +43,7 @@
 </head>
 <body>
 	<div class='row'>
-		<center><img id ='logo' src="logo_ezxchange.png" ></center>
+		<center><img id ='logo' src="../images/logo_ezxchange.png" ></center>
 	</div>
 	<center><div class='container' id ='main'>
 		<div class="row">
@@ -54,7 +53,7 @@
 				<h5>Amount:</h5>
 				<input type='number' id='base_currency' min='1'   value = '1'/>	
 			</div>
-			<div class='col-sm-2'><br><img class="btTxt_submit" src="switch_currency.png" style='height:80px;width:80px;'><br><br>
+			<div class='col-sm-2'><br><img class="btTxt_submit" src="../images/switch_currency.png" style='height:80px;width:80px;'><br><br>
 				<button class='btn btn-primary active' id='switch' data-toggle="tooltip" title="Click Switch button to revese the exchange!"/>Switch</button>
 			</div>
 			<div class='col-sm-5'><h5><b>Currency I  want</b></h5><br>
@@ -90,7 +89,9 @@
 </body>
 </html>
 <script type="text/javascript">
+	//self invoking function
 	var operation = (function(){
+		//initialize varibles that will be used many times
 		var currencies1  = $('#currencies1');
 		var currencies2  = $('#currencies2');
 		var interest_rate  = $('#interbank_rate');
@@ -116,9 +117,11 @@
 			$('#convert_currency').val(Math.round(rate* 100) / 100);
 		});
 		}
+		//this self invoking function points to "window" object, send the update function to window, so we can use it.
 		window.update = update;
 	})(); 
-
+	
+	// this function will delay the update function for 0.5 seconds to wait for the user finish typing 
 	var type_and_update = (function(){
 		var counter  = 0;
 		return function(){
@@ -129,25 +132,26 @@
 
 	$(document).ready(function(){
 		$('[data-toggle="tooltip"]').tooltip(); 
+		//get exchange rates once the page finishes loading
 		update();
+
 		$('#currencies1').on("change.bfhselectbox",function(){
 			update();
 		});
 		$('#currencies2').bind("change.bfhselectbox",function(){
 			update();
 		});
-
 		$('#base_currency').keyup(function(){
 			type_and_update();
 		});
 		$('#base_currency').change(function(){update();});
-
+		
+		//if Switch button is clicked, swap the currencies and update the exchange rate
 		$('#switch').click(function(){
 			var value1  = $('#currencies1').val();
 			$('#currencies1').val($('#currencies2').val());
 			$('#currencies2').val(value1);
 			update();
 		});
-		//set the maximum of data field to today's data. The format is yyyy-mm-dd. See functions.js !
 	});
 </script>
