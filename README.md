@@ -10,6 +10,7 @@ This web application was built with an intention to help travelers get an exchan
 ::API Reference
 
 Data is retreive from Yahoo Finance Exchange Rate API:
+
 yql_query = 'select%20*%20from%20yahoo.finance.xchange%20where%20pair%20in%20("'+currencies1+currencies2+'")';
 yql_query_url = yql_base_url + "?q=" + yql_query + "&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";
 
