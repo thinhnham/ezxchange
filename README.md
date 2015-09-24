@@ -1,4 +1,4 @@
-::Synopsis
+<b>Synopsis
 
 Ezxchange is a simple currency convert that will retreive exchange rates from Yahoo Finance. The program can be used on all devices (smart phones, tablets, and PCs). 
 
