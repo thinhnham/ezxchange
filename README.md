@@ -21,6 +21,4 @@ Use an  ajax call (XMLHttpRequest/$.ajax()/$.get()) to send this query to Yahoo!
 This program is simple. I'd like to add a graph that shows the periodic trend for the exchange rates. However, Yahoo Finance API doesn't have an API for the historical exchange rates.
 They do have one but it has US Dollas as the base currency ! APIs for historical rates are not free. If anyone has access to historical rates, please expand this app. 
 
-<b>License</b>
 
-(Apache, Javascript, BootstrapFormHelper, Jquery)
